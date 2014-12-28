@@ -27,6 +27,7 @@ class Database{
       $query = "CREATE TABLE if not exists `log` (
          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
          `caliber` varchar(255) NOT NULL DEFAULT '',
+         `bullet` varchar(255) NOT NULL DEFAULT '',
          `charge` float NOT NULL,
          `CC` float DEFAULT NULL,
          `COL` float DEFAULT NULL,
@@ -42,7 +43,7 @@ class Database{
    }
 
    public function get(){
-      $query = "select * from log";
+      $query = "select * from log order by caliber asc";
       $res = $this->conn->query("SELECT * FROM log");
       return $res;
    }
@@ -53,8 +54,10 @@ class Database{
        * YOU HAVE PREPARED STATEMENTS FOR A REASON, YOU DOUCHE
        * THIS CODE SHOULD BE UPDATED
        */
-      $query = "UPDATE `log` SET $name = '$value' where id='$id'";
-      $res = $this->conn->query($query);
+      $query = "UPDATE `log` SET `?`=? where `id`=?";
+      $res = $this->conn->prepare($query);
+      $res->bind_param('sss', $name, $value, $id);
+      $res->execute();
       return null;
    }
 
@@ -66,10 +69,10 @@ class Database{
       return null;
    }
 
-   public function create_load($cal, $charge, $cc, $col, $report){
-      $query = "insert into log set `caliber`=?, `charge`=?, `cc`=?, `col`=?, `report`=?";
+   public function create_load($cal, $bullet, $charge, $cc, $col, $report){
+      $query = "insert into log set `caliber`=?,`bullet`=?, `charge`=?, `cc`=?, `col`=?, `report`=?";
       $res = $this->conn->prepare($query);
-      $res->bind_param('sssss', $cal, $charge, $cc, $col, $report);
+      $res->bind_param('ssssss', $cal, $bullet, $charge, $cc, $col, $report);
       $res->execute();
    }
 

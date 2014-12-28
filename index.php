@@ -15,7 +15,7 @@ $rows = $db->get();
          <?php $tmp = (object) $row;?>
          <div class="load">
             <div class="delete"><a href="delete.php?id=<?php echo $tmp->id;?>">x</a></div>
-            <h2><?php echo $tmp->caliber; ?> <small><?php echo $tmp->charge; ?> grains<span><?php echo $tmp->CC; ?> CC</span></small></h2>
+            <h2><?php echo $tmp->caliber; ?> (<?php echo $tmp->bullet;?>) <small><?php echo $tmp->charge; ?> grains<span><?php echo $tmp->CC; ?> CC</span></small></h2>
             <div class="report"><?php echo $tmp->report; ?></div>
          </div>
       <?php endforeach;?>
@@ -24,6 +24,10 @@ $rows = $db->get();
    <form action="add.php" method="post">
       <label>Caliber
          <input type="text" name="caliber" />
+      </label>
+
+      <label>Bullet
+         <input type="text" name="bullet" />
       </label>
 
       <label>Charge Weight
