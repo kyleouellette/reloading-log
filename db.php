@@ -20,44 +20,52 @@ class Database{
           printf("Connect failed: %s\n", $mysqli->connect_error);
           exit();
       }
-      $this->create_table();
+      // $this->create_table();
+      return $this;
    }
 
    private function create_table(){
-      $query = "CREATE TABLE if not exists `log` (
-         `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-         `caliber` varchar(255) NOT NULL DEFAULT '',
-         `bullet` varchar(255) NOT NULL DEFAULT '',
-         `charge` float NOT NULL,
-         `CC` float DEFAULT NULL,
-         `COL` float DEFAULT NULL,
-         `report` text,
-         PRIMARY KEY (`id`)
-         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;";
+      $query = "CREATE TABLE if not exists`log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `caliber` varchar(255) NOT NULL DEFAULT '',
+  `bullet` varchar(255) NOT NULL DEFAULT '',
+  `charge` varchar(255) NOT NULL DEFAULT '',
+  `CC` varchar(255) DEFAULT NULL,
+  `COL` float DEFAULT NULL,
+  `report` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;";
 
       if($this->conn->query($query) === true){
-         return this;
+         return $this;
       }
       echo "BAD CONNECTION";
       return false;
    }
 
    public function get(){
-      $query = "select * from log order by caliber asc";
+      $query = "select * from log order by caliber";
       $res = $this->conn->query("SELECT * FROM log");
       return $res;
    }
 
+   public function get_by_id($id){
+      $query = "select * from log where `id`=? limit 1";
+      $results = $this->conn->prepare($query);
+      $results->bind_param('s', $id);
+      $results->execute();
+      return $results->get_result();
+   }
+
    public function update_property($id, $name, $value){
       /**
-       * THIS IS NOT THE WAY THE QUERY SHOULD BE DONE
-       * YOU HAVE PREPARED STATEMENTS FOR A REASON, YOU DOUCHE
-       * THIS CODE SHOULD BE UPDATED
+       * GOOD GOD! USE MYSQLI RIGHT!!!
+       * This is not how mysqli should be doing update statements. Update this code
+       * to use prepared statements like the rest of it!
        */
-      $query = "UPDATE `log` SET `?`=? where `id`=?";
-      $res = $this->conn->prepare($query);
-      $res->bind_param('sss', $name, $value, $id);
-      $res->execute();
+      $query = "UPDATE log SET `$name`='$value' where `id`=$id";
+      $res = $this->conn->query($query) || die($this->conn->error);
+      
       return null;
    }
 
