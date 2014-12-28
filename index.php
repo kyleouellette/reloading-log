@@ -8,6 +8,7 @@ $rows = $db->get();
 <head>
    <title>Reloading Log</title>
    <link rel="stylesheet" type="text/css" href="_css/main.css">
+   <meta name = "viewport" content = "width = device-width">
 </head>
 <body>
    <div class="results">

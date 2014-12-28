@@ -20,7 +20,7 @@ class Database{
           printf("Connect failed: %s\n", $mysqli->connect_error);
           exit();
       }
-      // $this->create_table();
+      $this->create_table();
       return $this;
    }
 
